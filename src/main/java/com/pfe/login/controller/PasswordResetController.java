@@ -1,6 +1,5 @@
 package com.pfe.login.controller;
 
-import com.pfe.login.model.User;
 import com.pfe.login.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

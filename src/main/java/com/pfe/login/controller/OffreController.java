@@ -70,9 +70,4 @@ public class OffreController {
             return ResponseEntity.notFound().build();
         }
     }
-    @GetMapping("/type/{offreType}")
-    public ResponseEntity<List<Offre>> getOffersByType(@PathVariable String offreType) {
-        List<Offre> offers = offreService.getOffersByType(offreType);
-        return ResponseEntity.ok(offers);
-    }
 }

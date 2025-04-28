@@ -20,27 +20,20 @@ public class OffreService {
     }
 
     public List<Offre> getAllOffers() {
-
         return offreRepository.findAll();
     }
 
     public Optional<Offre> getOfferById(Long id) {
-
         return offreRepository.findById(id);
     }
 
     public List<Offre> searchOffers(String query) {
-
         return offreRepository.searchOffers(query);
     }
 
     @Transactional
     public Offre createOffer(Offre offer) {
-
         return offreRepository.save(offer);
-    }
-    public List<Offre> getOffersByType(String offreType) {
-        return offreRepository.findByOffreType(offreType);
     }
 
     @Transactional
@@ -50,7 +43,6 @@ public class OffreService {
                     existingOffer.setTitle(offerDetails.getTitle());
                     existingOffer.setDescription(offerDetails.getDescription());
                     existingOffer.setImageUrl(offerDetails.getImageUrl());
-                    existingOffer.setOffreType(offerDetails.getOffreType()); // Ajoutez cette ligne
                     existingOffer.setDetailsDescription(offerDetails.getDetailsDescription());
                     existingOffer.setFeatures(offerDetails.getFeatures());
                     existingOffer.setObjectives(offerDetails.getObjectives());

@@ -10,10 +10,8 @@ import java.util.List;
 
 @Repository
 public interface OffreRepository extends JpaRepository<Offre, Long> {
-    // Méthode existante pour la recherche
+
+    // Méthode pour rechercher des offres par titre ou description
     @Query("SELECT o FROM Offre o WHERE LOWER(o.title) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(o.description) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Offre> searchOffers(@Param("query") String query);
-
-    // Nouvelle méthode pour filtrer par type d'offre
-    List<Offre> findByOffreType(String offreType);
 }

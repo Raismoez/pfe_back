@@ -46,9 +46,6 @@ public class Offre {
     @Column(name = "subscription_channels", columnDefinition = "text[]")
     private List<String> subscriptionChannels = new ArrayList<>();
 
-    @Column(name = "offre_type")
-    private String offreType;
-
 
 
     // Getters and Setters
@@ -132,14 +129,6 @@ public class Offre {
         this.subscriptionChannels = subscriptionChannels;
     }
 
-    public String getOffreType() {
-        return offreType;
-    }
-
-    public void setOffreType(String offreType) {
-        this.offreType = offreType;
-    }
-
     @Override
     public String toString() {
         return "Offre{" +
@@ -153,7 +142,6 @@ public class Offre {
                 ", prix='" + prix + '\'' +
                 ", paymentOptions=" + paymentOptions +
                 ", subscriptionChannels=" + subscriptionChannels +
-                ", offreType='" + offreType + '\'' +
                 '}';
     }
 }

@@ -24,13 +24,20 @@ public class ReservationService {
 
     // Méthode pour envoyer un e-mail de confirmation
     public void sendConfirmationEmail(String to, String subject, String body) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("meriamdaadaa8@gmail.com");  // Adresse de l'expéditeur
-        message.setTo(to);  // Destinataire
-        message.setSubject(subject);  // Sujet
-        message.setText(body);  // Corps du message
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("meriamdaadaa8@gmail.com");  // Adresse de l'expéditeur
+            message.setTo("mariem.daadaa@esen.tn"); // Destinataire
+            message.setSubject(subject);  // Sujet
+            message.setText(body);  // Corps du message
 
-        javaMailSender.send(message);
+            System.out.println("Tentative d'envoi d'un e-mail à: " + to + " avec le sujet: " + subject);
+            javaMailSender.send(message);
+            System.out.println("E-mail envoyé avec succès");
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'envoi de l'e-mail: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     // Créer une nouvelle réservation
@@ -72,39 +79,58 @@ public class ReservationService {
         reservationRepository.delete(reservation);
     }
 
+
     // Confirmer une réservation et envoyer un e-mail
     public Reservation confirmReservation(Long id, String agentEmail) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Réservation introuvable avec l'ID: " + id));
 
         reservation.setStatus(Reservation.ReservationStatus.CONFIRMEE);
-        reservationRepository.save(reservation);
+        reservation = reservationRepository.save(reservation);
 
-        String emailBody = "Bonjour, votre réservation pour le projet " + reservation.getNomDuProjet() + " a été confirmée.";
-        sendConfirmationEmail(agentEmail, "Confirmation de réservation", emailBody);
+        String emailBody = "Bonjour,\n\n" +
+                "Votre réservation pour le projet \"" + reservation.getNomDuProjet() + "\" a été confirmée.\n\n" +
+                "Détails de la réservation :\n" +
+                "- Projet : " + reservation.getNomDuProjet() + "\n" +
+                "- Constructeur : " + reservation.getConstructeur() + "\n" +
+                "- Catégorie : " + reservation.getCategorie() + "\n" +
+                "- Article : " + reservation.getArticle() + "\n" +
+                "- Date : " + reservation.getDateReservation() + "\n\n" +
+                "Cordialement";
+
+        sendConfirmationEmail(agentEmail, "Confirmation de réservation - " + reservation.getNomDuProjet(), emailBody);
 
         return reservation;
     }
 
-    // Annuler une réservation
-    public Reservation cancelReservation(Long id) {
+    // Annuler une réservation et envoyer un e-mail
+    public Reservation cancelReservation(Long id, String agentEmail) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Réservation introuvable avec l'ID: " + id));
 
         reservation.setStatus(Reservation.ReservationStatus.ANNULEE);
-        return reservationRepository.save(reservation);
+        reservation = reservationRepository.save(reservation);
+
+        // Créer un message d'e-mail détaillé pour l'annulation
+        String emailBody = "Bonjour,\n\n" +
+                "Votre réservation pour le projet \"" + reservation.getNomDuProjet() + "\" a été annulée.\n\n" +
+                "Détails de la réservation :\n" +
+                "- Projet : " + reservation.getNomDuProjet() + "\n" +
+                "- Constructeur : " + reservation.getConstructeur() + "\n" +
+                "- Catégorie : " + reservation.getCategorie() + "\n" +
+                "- Article : " + reservation.getArticle() + "\n" +
+                "- Date : " + reservation.getDateReservation() + "\n\n" +
+                "Cordialement";
+
+        sendConfirmationEmail(agentEmail, "Annulation de réservation - " + reservation.getNomDuProjet(), emailBody);
+
+        return reservation;
     }
+
+
 
     // Trouver les réservations par statut
     public List<Reservation> getReservationsByStatus(Reservation.ReservationStatus status) {
         return reservationRepository.findByStatus(status);
     }
-
-    // Trouver les réservations pour un constructeur spécifique
-    public List<Reservation> getReservationsByConstructeur(String constructeur) {
-        return reservationRepository.findByConstructeurIgnoreCase(constructeur);
-    }
-
-    // Trouver les réservations pour une catégorie spécifique
-
 }

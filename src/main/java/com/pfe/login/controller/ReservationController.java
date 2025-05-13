@@ -58,6 +58,7 @@ public class ReservationController {
         reservationService.deleteReservation(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
     // confirmer une réservation
     @PatchMapping("/{id}/confirm")
     public ResponseEntity<Reservation> confirmReservation(
@@ -66,10 +67,13 @@ public class ReservationController {
         Reservation confirmedReservation = reservationService.confirmReservation(id, email);
         return new ResponseEntity<>(confirmedReservation, HttpStatus.OK);
     }
+
     // Annuler une réservation
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<Reservation> cancelReservation(@PathVariable Long id) {
-        Reservation canceledReservation = reservationService.cancelReservation(id);
+    public ResponseEntity<Reservation> cancelReservation(
+            @PathVariable Long id,
+            @RequestParam String email) {
+        Reservation canceledReservation = reservationService.cancelReservation(id, email);
         return new ResponseEntity<>(canceledReservation, HttpStatus.OK);
     }
 
@@ -78,22 +82,6 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> getReservationsByStatus(
             @PathVariable Reservation.ReservationStatus status) {
         List<Reservation> reservations = reservationService.getReservationsByStatus(status);
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
-    }
-
-    // Obtenir les réservations par constructeur
-    @GetMapping("/constructeur/{constructeur}")
-    public ResponseEntity<List<Reservation>> getReservationsByConstructeur(
-            @PathVariable String constructeur) {
-        List<Reservation> reservations = reservationService.getReservationsByConstructeur(constructeur);
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
-    }
-
-    // Obtenir les réservations par catégorie
-    @GetMapping("/categorie/{categorie}")
-    public ResponseEntity<List<Reservation>> getReservationsByCategorie(
-            @PathVariable String categorie) {
-        List<Reservation> reservations = reservationService.getReservationsByCategorie(categorie);
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 }
